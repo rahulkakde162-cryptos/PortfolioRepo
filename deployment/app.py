@@ -6,15 +6,13 @@ import joblib
 # Download and load the model
 model_path = hf_hub_download(
     repo_id="RahulKakde/PortfolioModel",
-    filename="bestmodel.joblib"
+    filename="best_model.joblib"
 )
 model = joblib.load(model_path)
 
 # Streamlit UI for Machine Failure Prediction
-st.title("Tourism Package")
-st.write("""
-This application predicts the likelihood of a customer in purchasing the tourism package.
-Please enter the sensor and configuration data below to get a prediction.
+st.title("Tourism Package Purchase")
+st.write(""" Please enter the customer information below to predict whether the customer is likely to purchase the tourism package.
 """)
 
 age = st.number_input(
@@ -92,7 +90,6 @@ own_car = st.selectbox(
     "Own Car",
     [0, 1]
 )
-
 designation = st.selectbox(
     "Designation",
     [
@@ -102,7 +99,9 @@ designation = st.selectbox(
         "AVP",
         "VP"
     ]
-    duration_pitch = st.number_input(
+)
+
+duration_pitch = st.number_input(
     "Duration Of Pitch",
     min_value=0,
     max_value=1000,
@@ -125,7 +124,6 @@ product_pitched = st.selectbox(
     "Product Pitched",
     ["Basic", "Standard", "Deluxe", "Super Deluxe", "King"]
 )
-)
 
 # Create input dataframe
 input_data = pd.DataFrame([{
@@ -142,7 +140,7 @@ input_data = pd.DataFrame([{
     "OwnCar": own_car,
     "NumberOfChildrenVisiting": num_children,
     "Designation": designation,
-    "MonthlyIncome": monthly_income
+    "MonthlyIncome": monthly_income,
     "DurationOfPitch": duration_pitch,
     "NumberOfFollowups": followups,
     "PitchSatisfactionScore": pitch_score,
@@ -151,7 +149,7 @@ input_data = pd.DataFrame([{
 
 
 
-if st.button("Product Purchased"):
+if st.button("Predict Purchase"):
     prediction = model.predict(input_data)[0]
     result = "Product Purchased" if prediction == 1 else "Product Not Purchased"
     st.subheader("Prediction Result:")
